@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import "./styles.css";
 
-function App() {
+export default function App() {
+  const [data, setData] = useState([]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hello CodeSandbox</h1>
+      <h2>Start editing to see some magic happen!</h2>
     </div>
+    <Co2SavedComponent APIData={data} />
   );
+  function Co2SavedComponent(props) {
+    return (
+      <>
+        <h1>Co2 Saved:</h1>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Co2Produced</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.APIData.map((t, index) => (
+              <tr key={index}>
+                <td>
+                  <b>{t.type}</b>
+                </td>
+                <td>
+                  <b>{t.co2Produced}</b>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    );
+  }
 }
-
-export default App;
