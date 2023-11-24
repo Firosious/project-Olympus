@@ -1,38 +1,79 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Resets */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  /* App container */
+  .App {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
-  to {
-    transform: rotate(360deg);
+  
+  /* Header section */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
   }
-}
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  /* Welcome message */
+  .welcome {
+    font-size: 20px;
+    margin: 20px 0;
+  }
+  
+  /* Input fields group */
+  .input-group {
+    margin: 10px 0;
+  }
+  
+  /* Individual input field */
+  .input-group input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #000;
+    border-radius: 5px;
+    width: 250px;
+  }
+  
+  /* Button group at the top right */
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  /* Individual buttons */
+  .button-group button {
+    padding: 8px 16px;
+    margin-left: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #fff;
+    font-size: 16px;
+  }
+  
+  /* Hover effect for buttons */
+  .button-group button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Logout button specific styles */
+  .logout-button {
+    font-weight: bold;
+  }
+  
+  /* Add additional global styles as needed */
+  

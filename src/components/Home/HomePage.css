@@ -1,0 +1,35 @@
+/* src/components/HomePage/HomePage.css */
+.HomePage {
+    text-align: center;
+  }
+  
+  .HomePage-header {
+    background-color: #282c34;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .HomePage-content {
+    margin: 20px;
+  }
+  
+  .HomePage-loginButton {
+    background-color: #4285f4; /* Google's blue color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .HomePage-loginButton:hover {
+    background-color: #357ae8;
+  }
+  
