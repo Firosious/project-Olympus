@@ -13,20 +13,32 @@ function Dashboard() {
   const [steps, setSteps] = useState('');
   const [pace, setPace] = useState('');
 
+  const maxSteps = 100000;
+  const maxPace = 100;
+
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
   const handleDataReport = () => {
-    // Here you would navigate to the data report page
     navigate("/analysis");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Submit the steps and pace to the backend
     console.log(steps, pace);
+    // Submit the steps and pace to the backend
+  };
+
+  const handleStepsChange = (e) => {
+    const value = Math.min(Math.max(0, e.target.value), maxSteps); // This will prevent negative values
+    setSteps(value);
+  };
+
+  const handlePaceChange = (e) => {
+    const value = Math.min(Math.max(0, e.target.value), maxPace); // This will prevent negative values
+    setPace(value);
   };
 
   return (
@@ -47,7 +59,7 @@ function Dashboard() {
               <input 
                 type="number" 
                 value={steps} 
-                onChange={(e) => setSteps(e.target.value)} 
+                onChange={handleStepsChange} 
               />
             </label>
           </div>
@@ -57,7 +69,7 @@ function Dashboard() {
               <input 
                 type="number" 
                 value={pace} 
-                onChange={(e) => setPace(e.target.value)} 
+                onChange={handlePaceChange} 
               />
             </label>
           </div>
