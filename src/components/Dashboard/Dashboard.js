@@ -1,28 +1,26 @@
 // src/components/Dashboard/Dashboard.js
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Go two levels up
-import './Dashboard.css'; // Make sure you define the styles in Dashboard.css
+import { useAuth } from '../../context/AuthContext';
+import './Dashboard.css';
 
 function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
 
-  // You would replace these with actual user data
   const user = location.state?.user || { firstName: 'User' };
   const [steps, setSteps] = useState('');
   const [pace, setPace] = useState('');
 
   const handleLogout = () => {
-    // Here you would clear the session/storage and navigate to login or home
     logout();
     navigate('/');
   };
 
   const handleDataReport = () => {
     // Here you would navigate to the data report page
-    navigate('/analysis');
+    navigate("/analysis");
   };
 
   const handleSubmit = (e) => {
