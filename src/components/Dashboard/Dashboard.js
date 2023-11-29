@@ -1,21 +1,31 @@
-// src/components/Dashboard/Dashboard.js
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import SettingsModal from '../Modal/SettingsModal';
+import { fetchStepData } from '../../services/GoogleFitService';
 import './Dashboard.css';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
-  const user = location.state?.user || { firstName: 'User' };
-  const [steps, setSteps] = useState('');
+  const [totalSteps, setTotalSteps] = useState(0);
   const [pace, setPace] = useState('');
 
-  const maxSteps = 100000;
-  const maxPace = 100;
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem('googleAccessToken');
+    if (accessToken) {
+      fetchStepData(accessToken).then(fetchedSteps => {
+        console.log('Fetched Steps from Google Fit:', fetchedSteps); // Debugging log
+        setTotalSteps(fetchedSteps);
+      });
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+  
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -27,18 +37,17 @@ function Dashboard() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(steps, pace);
-    // Submit the steps and pace to the backend
-  };
-
-  const handleStepsChange = (e) => {
-    const value = Math.min(Math.max(0, e.target.value), maxSteps); // This will prevent negative values
-    setSteps(value);
+    console.log('Pace: ', pace, 'Total Steps: ', totalSteps); // Log the pace value and total steps
+    // Submit logic here
   };
 
   const handlePaceChange = (e) => {
-    const value = Math.min(Math.max(0, e.target.value), maxPace); // This will prevent negative values
+    const value = Math.min(Math.max(0, e.target.value), 30); // Prevent negative values and limit to 30
     setPace(value);
+  };
+
+  const toggleSettingsModal = () => {
+    setIsSettingsModalOpen(!isSettingsModalOpen);
   };
 
   return (
@@ -47,22 +56,14 @@ function Dashboard() {
         <h1>Project Olympus</h1>
         <div>
           <button onClick={handleDataReport}>Data Report</button>
+          <button onClick={toggleSettingsModal}>Settings</button>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
       <div className="Dashboard-content">
-        <h2>Welcome {user.firstName}!</h2>
+        <h2>Welcome {user?.firstName || 'User'}!</h2>
+        <h3>Daily Steps Total: {totalSteps}</h3> {/* Display the total daily steps */}
         <form onSubmit={handleSubmit}>
-          <div>
-            <label>
-              Steps:
-              <input 
-                type="number" 
-                value={steps} 
-                onChange={handleStepsChange} 
-              />
-            </label>
-          </div>
           <div>
             <label>
               Pace:
@@ -70,12 +71,18 @@ function Dashboard() {
                 type="number" 
                 value={pace} 
                 onChange={handlePaceChange} 
+                max={30}
               />
             </label>
           </div>
           <button type="submit">Submit</button>
         </form>
       </div>
+
+      <SettingsModal 
+        isOpen={isSettingsModalOpen} 
+        onClose={toggleSettingsModal} 
+      />
     </div>
   );
 }
