@@ -1,68 +1,57 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Adjust the path as necessary
+import { useAuth } from '../../context/AuthContext';
 import './LoginPage.css';
-
-const clientId = "202884518480-r03osi0so4qluiu3bd7vhqrmr674d4cp.apps.googleusercontent.com";
+import googleIcon from '../../img/g-logo.png';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Add this to use the login function from AuthContext
-
-  const handleCallbackResponse = useCallback((response) => {
-    console.log("Encoded JWT ID token: " + response.credential);
-    const user = getUserFromResponse(response);
-    login(); // Set the authentication state to logged in
-    navigate('/dashboard', { state: { user } });
-  }, [navigate, login]); // Add login to the dependency array
-
-  const getUserFromResponse = (response) => {
-    const base64Url = response.credential.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    const { given_name } = JSON.parse(jsonPayload);
-    return { firstName: given_name };
-  };
-
-  const initializeGoogleSignIn = useCallback(() => {
-    google.accounts.id.initialize({
-      client_id: clientId,
-      callback: handleCallbackResponse
-    });
-
-    /* global google */
-    google.accounts.id.renderButton(
-      document.getElementById("signInDiv"),
-      { theme: "outline", size: "large" }
-    );
-
-    google.accounts.id.prompt();
-  }, [handleCallbackResponse]);
+  const { user, login } = useAuth();
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+    // If user data exists in local storage, consider the user as authenticated
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      login(JSON.parse(userData));
+    }
 
-    script.onload = () => {
-      initializeGoogleSignIn();
+    // Redirect to dashboard if user is authenticated
+    if (user) {
+      navigate('/dashboard');
+    }
+
+    const handleMessage = (event) => {
+      if (event.origin !== window.location.origin) {
+        return;
+      }
+
+      if (event.data.success) {
+        login(event.data.user); // Update auth state
+        navigate('/dashboard'); // Redirect to dashboard
+      }
     };
 
-    // Clean up the script when the component unmounts
+    window.addEventListener('message', handleMessage);
     return () => {
-      document.body.removeChild(script);
+      window.removeEventListener('message', handleMessage);
     };
-  }, [initializeGoogleSignIn]); // Now initializeGoogleSignIn is included as a dependency
+  }, [user, navigate, login]);
+
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const redirectUri = encodeURIComponent('http://localhost:3000/callback');
+  const scope = encodeURIComponent('https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile');
+
+  const handleSignInClick = () => {
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
+    window.open(authUrl, 'googleLogin', 'width=500,height=600');
+  };
 
   return (
     <div className="LoginPage">
-      <div id="signInDiv"></div>
-      {/* You can add more login related content here */}
+      <button onClick={handleSignInClick} className="googleSignInButton">
+        <img src={googleIcon} alt="Google sign-in" />
+        Sign in with Google
+      </button>
     </div>
   );
 }

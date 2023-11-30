@@ -1,34 +1,53 @@
-// src/components/Dashboard/Dashboard.js
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Go two levels up
-import './Dashboard.css'; // Make sure you define the styles in Dashboard.css
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import SettingsModal from '../Modal/SettingsModal';
+import { fetchStepData } from '../../services/GoogleFitService';
+import './Dashboard.css';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
-  // You would replace these with actual user data
-  const user = location.state?.user || { firstName: 'User' };
-  const [steps, setSteps] = useState('');
+  const [totalSteps, setTotalSteps] = useState(0);
   const [pace, setPace] = useState('');
 
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('googleAccessToken');
+    if (accessToken) {
+      fetchStepData(accessToken).then(fetchedSteps => {
+        console.log('Fetched Steps from Google Fit:', fetchedSteps); // Debugging log
+        setTotalSteps(fetchedSteps);
+      });
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+  
   const handleLogout = () => {
-    // Here you would clear the session/storage and navigate to login or home
     logout();
     navigate('/');
   };
 
   const handleDataReport = () => {
-    // Here you would navigate to the data report page
-    navigate('/analysis');
+    navigate("/analysis");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Submit the steps and pace to the backend
-    console.log(steps, pace);
+    console.log('Pace: ', pace, 'Total Steps: ', totalSteps); // Log the pace value and total steps
+    // Submit logic here
+  };
+
+  const handlePaceChange = (e) => {
+    const value = Math.min(Math.max(0, e.target.value), 30); // Prevent negative values and limit to 30
+    setPace(value);
+  };
+
+  const toggleSettingsModal = () => {
+    setIsSettingsModalOpen(!isSettingsModalOpen);
   };
 
   return (
@@ -37,35 +56,33 @@ function Dashboard() {
         <h1>Project Olympus</h1>
         <div>
           <button onClick={handleDataReport}>Data Report</button>
+          <button onClick={toggleSettingsModal}>Settings</button>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
       <div className="Dashboard-content">
-        <h2>Welcome {user.firstName}!</h2>
+        <h2>Welcome {user?.firstName || 'User'}!</h2>
+        <h3>Daily Steps Total: {totalSteps}</h3> {/* Display the total daily steps */}
         <form onSubmit={handleSubmit}>
-          <div>
-            <label>
-              Steps:
-              <input 
-                type="number" 
-                value={steps} 
-                onChange={(e) => setSteps(e.target.value)} 
-              />
-            </label>
-          </div>
           <div>
             <label>
               Pace:
               <input 
                 type="number" 
                 value={pace} 
-                onChange={(e) => setPace(e.target.value)} 
+                onChange={handlePaceChange} 
+                max={30}
               />
             </label>
           </div>
           <button type="submit">Submit</button>
         </form>
       </div>
+
+      <SettingsModal 
+        isOpen={isSettingsModalOpen} 
+        onClose={toggleSettingsModal} 
+      />
     </div>
   );
 }

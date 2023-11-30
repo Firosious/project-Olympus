@@ -7,6 +7,7 @@ import HomePage from './components/Home/HomePage';
 import LoginPage from './components/Login/LoginPage';
 import Dashboard from './components/Dashboard/Dashboard';
 import Analysis from './components/DataAnalysis/Analysis'; // Import the Analysis component
+import Callback from './components/Callback/Callback';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/callback" element={<Callback />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
