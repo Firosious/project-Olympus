@@ -4,13 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import './LoginPage.css';
 import googleIcon from '../../img/g-logo.png';
 
-const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const redirectUri = encodeURIComponent('http://localhost:3000/callback');
-const scope = encodeURIComponent('https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.location.read');
-
 function LoginPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, login } = useAuth();
+  const { user, login } = useAuth();
 
   useEffect(() => {
     // If user data exists in local storage, consider the user as authenticated
@@ -19,8 +15,8 @@ function LoginPage() {
       login(JSON.parse(userData));
     }
 
-    // Redirect to dashboard if already authenticated
-    if (isAuthenticated) {
+    // Redirect to dashboard if user is authenticated
+    if (user) {
       navigate('/dashboard');
     }
 
@@ -39,7 +35,11 @@ function LoginPage() {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [isAuthenticated, navigate, login]);
+  }, [user, navigate, login]);
+
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const redirectUri = encodeURIComponent('http://localhost:3000/callback');
+  const scope = encodeURIComponent('https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile');
 
   const handleSignInClick = () => {
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;

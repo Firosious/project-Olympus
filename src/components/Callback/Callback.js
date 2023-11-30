@@ -18,31 +18,33 @@ function Callback() {
       .then(response => response.json())
       .then(data => {
         const user = {
+          googleId: data.sub,
           firstName: data.given_name,
-          googleId: data.sub // Assuming 'sub' is the Google ID
+          lastName: data.family_name,
+          email: data.email
         };
+        console.log('Google API response:', data);
+        console.log('User data to be sent:', user); // Add this line
 
-        // Save user data to backend
-        fetch('http://localhost:5000/api/users/authenticate', {
+        // Save user data to backend and handle the response
+        return fetch('http://localhost:5000/api/users/authenticate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(user),
-        })
-        .then(res => res.json())
-        .then(savedUser => {
-          // Perform login in AuthContext
-          login(savedUser);
-        })
-        .catch(err => {
-          console.error('Error saving user data:', err);
         });
-
+      })
+      .then(response => response.json())
+      .then(savedUser => {
+        // Update login state with the saved user data
+        login(savedUser);
         localStorage.setItem('googleAccessToken', accessToken);
+
+        // Navigate to dashboard or handle popup window
         if (window.opener) {
-          window.opener.postMessage({ success: true, user }, window.location.origin);
-          window.close();
+          window.opener.postMessage({ success: true, user: savedUser }, window.location.origin);
+          // window.close();
         } else {
           navigate('/dashboard');
         }
@@ -51,7 +53,7 @@ function Callback() {
         console.error('Error fetching user data:', error);
         if (window.opener) {
           window.opener.postMessage({ success: false }, window.location.origin);
-          window.close();
+          // window.close();
         } else {
           navigate('/login');
         }
@@ -59,7 +61,7 @@ function Callback() {
     } else {
       if (window.opener) {
         window.opener.postMessage({ success: false }, window.location.origin);
-        window.close();
+        // window.close();
       } else {
         navigate('/login');
       }
