@@ -44,7 +44,7 @@ function Callback() {
         // Navigate to dashboard or handle popup window
         if (window.opener) {
           window.opener.postMessage({ success: true, user: savedUser }, window.location.origin);
-          // window.close();
+          window.close();
         } else {
           navigate('/dashboard');
         }
@@ -53,7 +53,7 @@ function Callback() {
         console.error('Error fetching user data:', error);
         if (window.opener) {
           window.opener.postMessage({ success: false }, window.location.origin);
-          // window.close();
+          window.close();
         } else {
           navigate('/login');
         }
@@ -61,7 +61,7 @@ function Callback() {
     } else {
       if (window.opener) {
         window.opener.postMessage({ success: false }, window.location.origin);
-        // window.close();
+        window.close();
       } else {
         navigate('/login');
       }
