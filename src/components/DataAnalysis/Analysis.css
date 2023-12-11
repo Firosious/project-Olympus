@@ -1,0 +1,92 @@
+/* Analysis.css */
+.chart-container {
+    text-align: center;
+}
+
+.line-chart {
+    margin: auto;
+}
+
+.average-steps-display {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  color: #333;
+  font-weight: bold;
+}
+
+.buttons-container {
+    margin-top: 20px;
+}
+
+.week-button,
+.sync-button,
+.sync-last-7-days-button {
+    margin-right: 10px;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.sync-buttons-container {
+    margin-top: 10px;
+}
+
+.sync-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.sync-last-7-days-button {
+    background-color: #FF5722;
+    color: white;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.alert-message {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: #fff; /* Default white background */
+    color: #333; /* Default text color */
+}
+
+.alert-message.success {
+    background-color: #58D68D; /* Success green background */
+    color: white;
+}
+
+.alert-message.progress {
+    background-color: #E74C3C; /* Progress red background */
+    color: white;
+}
+
+.alert-message.error {
+    background-color: #E74C3C; /* Error red background */
+    color: white;
+    font-weight: bold;
+}
+
+.week-button.disabled,
+.sync-button.disabled,
+.sync-last-7-days-button.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
