@@ -15,7 +15,7 @@ const dailyActivitySchema = new mongoose.Schema({
 // Main schema for user's fitness activity
 const fitnessActivitySchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId, // Assuming Google ID is stored as an ObjectId reference to a User model
+        type: String,
         ref: 'User', // Replace 'User' with your User model name if different
         required: true
     },
