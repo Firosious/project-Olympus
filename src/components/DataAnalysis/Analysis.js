@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from "recharts";
 import { useAuth } from "../../context/AuthContext";
-import Navbar from "../Navbar/Navbar.js";
+import { calculateCarbonSavings } from "../../utils/carbonCalculator";
+import Navbar from "../Navbar/Navbar";
 import "./Analysis.css";
 
 const getWeekStartDate = (date) => {
   const startDate = new Date(date);
-  startDate.setDate(
-    startDate.getDate() -
-      (startDate.getDay() === 0 ? 6 : startDate.getDay() - 1)
-  );
+  const dayOfWeek = startDate.getDay();
+  const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust for Sunday
+  startDate.setDate(startDate.getDate() + difference);
   startDate.setHours(0, 0, 0, 0);
   return startDate;
 };
 
 const getWeekEndDate = (date) => {
   const endDate = new Date(date);
-  endDate.setDate(
-    endDate.getDate() - (endDate.getDay() === 0 ? 0 : endDate.getDay()) + 6
-  );
+  const dayOfWeek = endDate.getDay();
+  const difference = dayOfWeek === 0 ? 0 : 7 - dayOfWeek; // Adjust for Sunday
+  endDate.setDate(endDate.getDate() + difference);
   endDate.setHours(23, 59, 59, 999);
   return endDate;
 };
@@ -59,31 +59,46 @@ const Analysis = () => {
   const [syncMessage, setSyncMessage] = useState('');
   const { user } = useAuth();
 
+
+  // Updated State for Series Visibility
+  const [lineVisibility, setLineVisibility] = useState({
+    steps: true,
+    distance: true,
+    carSavings: true,
+    busSavings: true
+  });
+
   useEffect(() => {
     const fetchWeeklyData = async () => {
       const startDate = getWeekStartDate(currentDate);
       const endDate = getWeekEndDate(currentDate);
-
+  
       try {
         const response = await fetch(
-          `http://localhost:5000/api/fitnessData/weekly/${user._id}?start=${startDate.toISOString()}&end=${endDate.toISOString()}`
+          `http://localhost:5000/api/fitnessData/weekly/${user.googleId}?start=${startDate.toISOString()}&end=${endDate.toISOString()}`
         );
         let data = await response.json();
-
+  
         if (!Array.isArray(data)) {
           console.error('Received non-array data:', data);
           data = [];
-          for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-            data.push({ date: d.toISOString().split('T')[0], steps: 0 });
-          }
         }
-
-        const mappedData = data.map(item => ({
-          date: item.date.split('T')[0],
-          steps: item.steps || 0
-        }));
+  
+        // Calculate carbon savings for each day
+        const mappedData = data.map(item => {
+          const distanceInKm = item.distance / 1000; // Convert distance to kilometers if needed
+          const carbonSaved = calculateCarbonSavings(distanceInKm);
+  
+          return {
+            date: item.date.split('T')[0],
+            steps: item.steps || 0,
+            distance: item.distance || 0, // Ensure distance data is included
+            carbonSaved: carbonSaved.total,  // Use the total carbon saved
+            carSavings: carbonSaved.car,
+            busSavings: carbonSaved.bus
+          };
+        });
         setWeeklyData(mappedData);
-        setAverageSteps(calculateAverage(mappedData));
       } catch (error) {
         console.error('Error fetching weekly data:', error);
         setWeeklyData([]);
@@ -122,7 +137,7 @@ const Analysis = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: user._id,
+        userId: user.googleId,
         accessToken: localStorage.getItem("googleAccessToken"),
         startDate: start.toISOString(),
         endDate: end.toISOString(),
@@ -139,7 +154,7 @@ const Analysis = () => {
       setSyncMessage('Error occurred during sync.');
     });
 
-    const eventSource = new EventSource(`http://localhost:5000/api/fitnessData/syncStatus/${user._id}`);
+    const eventSource = new EventSource(`http://localhost:5000/api/fitnessData/syncStatus/${user.googleId}`);
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setSyncProgress(data.progress);
@@ -177,6 +192,20 @@ const Analysis = () => {
     startSync(startDate, endDate, false);
   };
 
+  // Function to handle legend clicks
+  const handleLegendClick = (e) => {
+    // Check if this is the last visible line
+    const isLastVisible = Object.keys(lineVisibility).filter(key => lineVisibility[key]).length === 1;
+    const isCurrentLineVisible = lineVisibility[e.dataKey];
+
+    if (!isLastVisible || !isCurrentLineVisible) {
+      setLineVisibility(prevState => ({
+        ...prevState,
+        [e.dataKey]: !prevState[e.dataKey]
+      }));
+    }
+  };
+
   return (
     <div>
       <Navbar onDashboard={false} />
@@ -195,17 +224,14 @@ const Analysis = () => {
         <LineChart width={1000} height={400} data={weeklyData} className="line-chart">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" tickFormatter={formatDate} />
-          <YAxis />
+          <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+          <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" /> {/* Uncomment and configure this */}
           <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="steps" stroke="#8884d8" />
-          <ReferenceLine y={averageSteps} label={{
-            value: 'Week Steps Average',
-            position: 'top',  // You can choose: 'top', 'bottom', 'insideTop', 'insideBottom', 'insideLeft', 'insideRight', 'insideTopLeft', etc.
-            fill: 'red',               // Text color
-            fontSize: 15,               // Font size
-            fontWeight: 'bold'          // Font weight
-          }} stroke="red" strokeDasharray="3 3" />
+          <Legend onClick={handleLegendClick} />
+          <Line yAxisId="left" type="monotone" dataKey="steps" stroke="#8884d8" name="Steps" hide={!lineVisibility.steps} />
+          <Line yAxisId="left" type="monotone" dataKey="distance" stroke="#82ca9d" name="Distance (m)" hide={!lineVisibility.distance} />
+          <Line yAxisId="right" type="monotone" dataKey="carSavings" stroke="#FF5733" name="Car Emissions Saved (g CO2)" hide={!lineVisibility.carSavings} />
+          <Line yAxisId="right" type="monotone" dataKey="busSavings" stroke="#33FF57" name="Bus Emissions Saved (g CO2)" hide={!lineVisibility.busSavings} />
         </LineChart>
         <div className="buttons-container">
           <button className={`week-button ${isSyncing ? 'disabled' : ''}`} onClick={handlePreviousWeek} disabled={isSyncing}>Previous Week</button>

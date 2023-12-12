@@ -1,14 +1,22 @@
 const express = require('express');
-const EventEmitter = require('events');
 const router = express.Router();
+const User = require('../models/User');
 const FitnessActivity = require('../models/FitnessActivity');
 const fetchGoogleFitData = require('../utils/fetchGoogleFitData');
 const { addOrUpdateDailyRecord } = require('../utils/fitnessDataUtils');
 
-// Global object to hold sync status
 const syncStatus = {};
 
-// POST /api/fitnessData/sync
+async function getUserDetails(userId) {
+    try {
+        const user = await User.findOne({ googleId: userId });
+        return user ? { sex: user.sex, heightInCm: user.heightInCm } : null;
+    } catch (err) {
+        console.error('Error fetching user details:', err);
+        return null;
+    }
+}
+
 router.post('/sync', async (req, res) => {
     const { userId, accessToken, startDate, endDate } = req.body;
 
@@ -20,7 +28,18 @@ router.post('/sync', async (req, res) => {
     syncStatus[userId] = { progress: 0 };
 
     try {
-        const fitnessData = await fetchGoogleFitData(accessToken, new Date(startDate), new Date(endDate));
+        const userDetails = await getUserDetails(userId);
+        if (!userDetails) {
+            return res.status(404).json({ error: 'User details not found' });
+        }
+
+        const fitnessData = await fetchGoogleFitData(
+            accessToken,
+            new Date(startDate),
+            new Date(endDate),
+            userDetails.sex,
+            userDetails.heightInCm
+        );
         console.log('Fetched data from Google Fit:', fitnessData);
 
         const totalActivities = fitnessData.length;
@@ -42,13 +61,12 @@ router.post('/sync', async (req, res) => {
     } catch (err) {
         console.error('Error in fitnessData /sync:', err);
         res.status(500).json({ error: err.message });
+        delete syncStatus[userId];
     }
 });
 
-// GET /api/fitnessData/syncStatus/:userId
 router.get('/syncStatus/:userId', (req, res) => {
     const { userId } = req.params;
-
     req.socket.setTimeout(24 * 60 * 60 * 1000); // 24 hours in milliseconds
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
@@ -80,24 +98,26 @@ router.get('/weekly/:userId', async (req, res) => {
 
     const startDate = new Date(start);
     const endDate = new Date(end);
+    const monthKey = String(startDate.getMonth() + 1).padStart(2, '0');
 
-    const year = startDate.getFullYear();
-    const month = String(startDate.getMonth() + 1).padStart(2, '0');
+    try {
+        const fitnessActivity = await FitnessActivity.findOne({ userId });
+        if (!fitnessActivity || !fitnessActivity.monthlyData.get(monthKey)) {
+            return res.status(404).json({ message: 'No data found' });
+        }
 
-    const fitnessActivity = await FitnessActivity.findOne({ userId, year });
+        let weeklyData = [];
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+            let date = d.toISOString().split('T')[0];
+            let dailyData = fitnessActivity.monthlyData.get(monthKey).find(record => record.date === date);
+            weeklyData.push({ date, steps: dailyData?.steps || 0, distance: dailyData?.distance || 0 });
+        }
 
-    if (!fitnessActivity) {
-        return res.status(404).json({ message: 'No data found' });
+        res.json(weeklyData);
+    } catch (err) {
+        console.error('Error fetching weekly data:', err);
+        res.status(500).json({ error: err.message });
     }
-
-    let weeklyData = [];
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-        let date = d.toISOString().split('T')[0];
-        let dailyData = fitnessActivity.monthlyData.get(month)?.find(record => record.date === date);
-        weeklyData.push({ date, steps: dailyData?.steps || 0 });
-    }
-
-    res.json(weeklyData);
 });
 
 module.exports = router;

@@ -11,13 +11,28 @@ function getEndOfMonthInMillis(date) {
     return endOfMonth.getTime();
 }
 
+function calculateStrideLength(heightInCm, sex) {
+    if (sex === 'male') {
+        return heightInCm * 0.415;
+    } else {
+        return heightInCm * 0.413;
+    }
+}
+
+function calculateDistance(steps, strideLengthInCm) {
+    if (steps > 0 && strideLengthInCm > 0) {
+        const distance = (steps * strideLengthInCm) / 100; // Convert to meters
+        return parseFloat(distance.toFixed(2)); // Round to 2 decimal places
+    }
+    return 0;
+}
+
 async function fetchMonthlyData(accessToken, startOfMonth, endOfMonth) {
     const googleFitURL = 'https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate';
 
     const requestBody = {
         aggregateBy: [
-            { dataTypeName: "com.google.step_count.delta" },
-            { dataTypeName: "com.google.distance.delta" }
+            { dataTypeName: "com.google.step_count.delta" }
         ],
         bucketByTime: { durationMillis: 86400000 }, // Daily aggregation
         startTimeMillis: startOfMonth,
@@ -40,7 +55,7 @@ async function fetchMonthlyData(accessToken, startOfMonth, endOfMonth) {
     return response.json();
 }
 
-async function fetchGoogleFitData(accessToken, startDate, endDate) {
+async function fetchGoogleFitData(accessToken, startDate, endDate, userSex, userHeightCm) {
     let transformedData = [];
 
     let current = new Date(startDate);
@@ -50,43 +65,33 @@ async function fetchGoogleFitData(accessToken, startDate, endDate) {
 
         try {
             const monthlyData = await fetchMonthlyData(accessToken, startOfMonth, endOfMonth);
-            transformedData.push(...transformGoogleFitData(monthlyData));
+            const strideLengthInCm = calculateStrideLength(userHeightCm, userSex);
+            const monthlyTransformedData = monthlyData.bucket.map(bucket => {
+                const bucketStartTime = new Date(parseInt(bucket.startTimeMillis));
+                let steps = 0;
+
+                bucket.dataset.forEach(dataset => {
+                    dataset.point.forEach(point => {
+                        if (point.dataTypeName === 'com.google.step_count.delta') {
+                            steps += point.value[0].intVal || 0;
+                        }
+                    });
+                });
+
+                return {
+                    date: bucketStartTime.toISOString().split('T')[0],
+                    steps: steps,
+                    distance: calculateDistance(steps, strideLengthInCm)
+                };
+            });
+
+            transformedData.push(...monthlyTransformedData);
         } catch (error) {
             console.error(`Error fetching data for month starting ${new Date(startOfMonth).toISOString()}:`, error);
         }
 
-        // Move to the first day of the next month
         current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
     }
-
-    return transformedData;
-}
-
-function transformGoogleFitData(data) {
-    let transformedData = [];
-
-    data.bucket.forEach(bucket => {
-        const bucketStartTime = new Date(parseInt(bucket.startTimeMillis));
-        let steps = 0;
-        let distance = 0;
-
-        bucket.dataset.forEach(dataset => {
-            dataset.point.forEach(point => {
-                if (point.dataTypeName === 'com.google.step_count.delta') {
-                    steps += point.value[0].intVal || 0;
-                }
-                if (point.dataTypeName === 'com.google.distance.delta') {
-                    distance += point.value[0].fpVal || 0;
-                }
-            });
-        });
-
-        transformedData.push({
-            date: bucketStartTime,
-            steps: steps,
-            distance: distance
-        });
-    });
 
     return transformedData;
 }

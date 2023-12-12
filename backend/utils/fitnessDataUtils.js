@@ -22,18 +22,17 @@ async function addOrUpdateDailyRecord(userId, year, month, dailyRecord) {
         let monthData = fitnessActivity.monthlyData.get(monthKey);
         let record = monthData.find(record => record.date === recordDate);
 
-        // If the record exists and data is different, update it
+        // Check if record exists and if steps or distance need to be updated
         if (record) {
             const needsUpdate = record.steps !== dailyRecord.steps || record.distance !== dailyRecord.distance;
             if (needsUpdate) {
-                Object.assign(record, dailyRecord, { date: recordDate });
+                Object.assign(record, dailyRecord);
+                fitnessActivity.markModified('monthlyData');
+                await fitnessActivity.save();
             }
         } else {
             // If the record doesn't exist, add it
             monthData.push({ ...dailyRecord, date: recordDate });
-        }
-
-        if (record || !fitnessActivity.monthlyData.has(monthKey)) {
             fitnessActivity.markModified('monthlyData');
             await fitnessActivity.save();
         }
