@@ -8,10 +8,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000; /* Ensures the modal is on top of everything else */
+    text-align: center;
 }
 
 .modalContent {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
+    width: 400px; /* Set a specific width for the modal content */
+}
+
+.sex-selection, .height-selection {
+    margin: 10px 0;
+}
+
+/* Style for individual input elements for height */
+.height-input {
+    width: 35px; /* Width for the height input fields */
+    margin: 0 5px;
+}
+
+/* Style for radio buttons for sex selection */
+.sex-radio {
+    margin-left: 10px;
 }

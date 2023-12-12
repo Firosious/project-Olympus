@@ -202,7 +202,7 @@ const Analysis = () => {
           <ReferenceLine y={averageSteps} label={{
             value: 'Week Steps Average',
             position: 'top',  // You can choose: 'top', 'bottom', 'insideTop', 'insideBottom', 'insideLeft', 'insideRight', 'insideTopLeft', etc.
-            fill: 'red',              // Text color
+            fill: 'red',               // Text color
             fontSize: 15,               // Font size
             fontWeight: 'bold'          // Font weight
           }} stroke="red" strokeDasharray="3 3" />
