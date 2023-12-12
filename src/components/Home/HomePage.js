@@ -2,6 +2,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./HomePage.css"; // Make sure you have some basic styles defined in HomePage.css
+import bannerImage from "../../img/banner.jpg";
+import footerImage from "../../img/footer.jpg";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -10,24 +12,36 @@ function HomePage() {
     navigate("/login"); // This will redirect the user to the login page
   };
 
+  const Banner = () => {
+    return (
+      <div>
+        <img src={bannerImage} alt="Banner" /> 
+      </div>
+    );
+  };
+
   return (
     <div className="HomePage">
       <header className="HomePage-header">
-        <h1>Welcome to Project Olympus</h1>
+        <Banner />
       </header>
       <section className="HomePage-content">
         <p>
-          Project Olympus is a revolutionary platform that allows you to track
-          your daily steps and pace, providing insights into your physical
-          activity and its environmental impact. Our innovative system
-          calculates your carbon footprint based on your activity, helping you
-          to become more conscious of your ecological footprint. Join us on the
-          journey to better health and a cleaner planet.
+          Project Olympus Mons tracks daily steps, providing insights into 
+          physical activity and its environmental impact. It calculates 
+          carbon footprint based on activity, encouraging individuals
+          to become more conscious of their ecological footprint.
         </p>
         <button onClick={redirectToLogin} className="HomePage-loginButton">
           Sign In with Google
         </button>
       </section>
+      <footer className="HomePage-footer">
+        <h1>Meet the team:
+          Firose, Patrick, Éanna, Audrius
+        </h1>
+        <img src={footerImage} alt="Footer" /> 
+      </footer>
     </div>
   );
 }

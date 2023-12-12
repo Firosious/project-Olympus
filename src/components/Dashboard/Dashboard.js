@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import SettingsModal from '../Modal/SettingsModal';
 import { fetchStepData } from '../../services/GoogleFitService';
+import { Co2SavedComponent } from '../../DataAnalysis/CalculateCo2';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -38,7 +39,7 @@ function Dashboard() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Pace: ', pace, 'Total Steps: ', totalSteps); // Log the pace value and total steps
-    // Submit logic here
+    props.onSubmit(Co2SavedComponent);
   };
 
   const handlePaceChange = (e) => {
@@ -75,7 +76,7 @@ function Dashboard() {
               />
             </label>
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit">Calculate my Co2 emissions saved by walking</button>
         </form>
       </div>
 
