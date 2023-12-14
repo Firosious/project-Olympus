@@ -2,10 +2,15 @@
 
 // Constants for carbon emission factors per kilometer (kg CO2/km)
 const EMISSION_FACTORS = {
-    car: 108.2, // Avg emission factor for cars
-    bus: 105, // Avg emission factor for buses
-    train: 41, // Avg emission factor for trains
-    // Add more if needed
+    walking: 69.8,                //Wells to wheels number of marginal Co2e in grammes per kilometre for various forms of trasnport
+    car: 122, 
+    bus: 90, 
+    train: 41, 
+    electric_scooter: 3.87,
+    bicycle: 35,
+    hellicopter: 10000,
+    electric_car: 58,
+    electric_unicycle: 2.7,
   };
   
   /**
