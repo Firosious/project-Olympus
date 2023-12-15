@@ -64,8 +64,16 @@ const Analysis = () => {
   const [lineVisibility, setLineVisibility] = useState({
     steps: true,
     distance: true,
-    carSavings: true,
-    busSavings: true
+    carGrammes: true,
+    busGrammes: false,
+    bicycleGrammes: false,
+    trainGrammes: false,
+    electric_scooterGrammes: false,   
+    helicopterGrammes: false,
+    electric_carGrammes: false,
+    electric_unicycleGrammes: false,
+    walkingGrammes: true
+    
   });
 
   useEffect(() => {
@@ -94,8 +102,15 @@ const Analysis = () => {
             steps: item.steps || 0,
             distance: item.distance || 0, // Ensure distance data is included
             carbonSaved: carbonSaved.total,  // Use the total carbon saved
-            carSavings: carbonSaved.car,
-            busSavings: carbonSaved.bus
+            carGrammes: carbonSaved.car,
+            busGrammes: carbonSaved.bus,
+            bicylcleGrammes: carbonSaved.bicycle,
+            trainGrammes: carbonSaved.train,
+            electric_scooterGrammes: carbonSaved.electric_scooter,
+            helicopterGrammes: carbonSaved.helicopter,
+            electric_carGrammes: carbonSaved.electric_car,
+            electric_unicycleGrammes: carbonSaved.electric_unicycle,
+            walkingGrammes: carbonSaved.walking
           };
         });
         setWeeklyData(mappedData);
@@ -230,8 +245,16 @@ const Analysis = () => {
           <Legend onClick={handleLegendClick} />
           <Line yAxisId="left" type="monotone" dataKey="steps" stroke="#8884d8" name="Steps" hide={!lineVisibility.steps} />
           <Line yAxisId="left" type="monotone" dataKey="distance" stroke="#82ca9d" name="Distance (m)" hide={!lineVisibility.distance} />
-          <Line yAxisId="right" type="monotone" dataKey="carSavings" stroke="#FF5733" name="Car Emissions Saved (g CO2)" hide={!lineVisibility.carSavings} />
-          <Line yAxisId="right" type="monotone" dataKey="busSavings" stroke="#33FF57" name="Bus Emissions Saved (g CO2)" hide={!lineVisibility.busSavings} />
+          <Line yAxisId="right" type="monotone" dataKey="carGrammes" stroke="#FF5733" name="Car (g CO2)" hide={!lineVisibility.carGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="busGrammes" stroke="#33FF57" name="Bus (g CO2)" hide={!lineVisibility.busGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="bicycleGrammes" stroke="#FF99FF" name="Bicycle (g CO2)" hide={!lineVisibility.bicycleGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="trainGrammes" stroke="#3366CC" name="Train (g CO2)" hide={!lineVisibility.trainGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="electric_scooterGrammes" stroke="#CC33FF" name="Electric Scooter (g CO2)" hide={!lineVisibility.electric_scooterGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="helicopterGrammes" stroke="#FFCC33" name="Helicopter (g CO2)" hide={!lineVisibility.helicopterGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="electric_carGrammes" stroke="#66CC66" name="Electric Car (g CO2)" hide={!lineVisibility.electric_carGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="electric_unicycleGrammes" stroke="#CC9966" name="Electric Unicycle (g CO2)" hide={!lineVisibility.electric_unicycleGrammes} />
+          <Line yAxisId="right" type="monotone" dataKey="walkingGrammes" stroke="#6666FF" name="Walking (g CO2)" hide={!lineVisibility.walkingGrammes} />
+
         </LineChart>
         <div className="buttons-container">
           <button className={`week-button ${isSyncing ? 'disabled' : ''}`} onClick={handlePreviousWeek} disabled={isSyncing}>Previous Week</button>
