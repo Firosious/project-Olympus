@@ -53,6 +53,7 @@ function Dashboard() {
     const savedEmission = emissions.car - emissions.walking;
     setCarEmissionSaved(Math.max(savedEmission, 0));
 
+
     // Set the emissions for each mode of transport
     setWalkingEmissions(emissions.walking);
     setEScooterEmissions(emissions.e_scooter);
@@ -209,7 +210,7 @@ const renderTooltip = ({ payload, label }) => {
             </div>
           </div>
         )}
-
+        
         <h3>
           Daily Steps: <i>{totalSteps}</i> | Weekly Total Steps: <i>{weeklyTotalSteps}</i>
         </h3>
