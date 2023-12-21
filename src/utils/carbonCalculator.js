@@ -1,5 +1,3 @@
-// CarbonCalculator.js
-
 // Constants for carbon emission factors per kilometer (g CO2/km)
 const EMISSION_FACTORS = {
   walking: 16, // Based on average diet and energy expenditure

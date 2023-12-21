@@ -12,7 +12,7 @@ html, body {
   align-items: center;
   font-family: 'Arial', sans-serif;
   color: #344e41;
-  background: #344e41; /* Soft blue-green background */
+  background: #344e41;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -47,7 +47,7 @@ html, body {
   bottom: 0;
   left: 0;
   background: radial-gradient(circle, transparent 1%, rgba(0, 10, 10, 1) 100%);
-  opacity: 0.7; /* Adjust opacity to make the image darker */
+  opacity: 0.7;
 }
 
 .HomePage-header > * {

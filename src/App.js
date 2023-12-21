@@ -1,11 +1,10 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './components/Home/HomePage';
 import Dashboard from './components/Dashboard/Dashboard';
-import Analysis from './components/DataAnalysis/Analysis'; // Import the Analysis component
+import Analysis from './components/DataAnalysis/Analysis';
 import Callback from './components/Callback/Callback';
 import Leaderboard from './components/Leaderboard/Leaderboard';
 
@@ -23,7 +22,7 @@ function App() {
           } />
           <Route path="/analysis" element={
             <ProtectedRoute>
-              <Analysis /> {/* Protected Route for Analysis */}
+              <Analysis />
             </ProtectedRoute>
           } />
           <Route path="/leaderboard" element={

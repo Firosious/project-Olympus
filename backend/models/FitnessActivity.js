@@ -1,4 +1,3 @@
-// FitnessActivity.js
 const mongoose = require('mongoose');
 
 // Schema for daily fitness activity data

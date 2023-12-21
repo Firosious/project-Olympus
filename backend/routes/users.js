@@ -1,4 +1,3 @@
-// users.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User'); // Adjust the path to your User model
