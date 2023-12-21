@@ -1,0 +1,145 @@
+.Leaderboard {
+    text-align: center;
+    position: relative;
+    min-height: 100vh;
+    height: auto;
+}
+
+.Leaderboard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('../../img/forestFootprintBG.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.95;
+    z-index: -1;
+    background-color: #fef6e4;
+}
+
+
+.leaderboard-container {
+    text-align: center;
+    margin: auto;
+    margin-top: 50px;
+    width: 80%;
+    max-width: 800px;
+    display: flex;         /* Use flexbox for alignment */
+    flex-direction: column; /* Align items vertically */
+    align-items: center;    /* Center-align items horizontally */
+}
+
+.leaderboard-title {
+    margin-bottom: 20px;
+}
+
+/* General Styles for All Buttons */
+.leaderboard-date-controls button,
+.leaderboard-type-controls button {
+    padding: 10px 15px;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+}
+
+/* Styles for Date Controls */
+.leaderboard-date-controls {
+    display: flex;
+    margin-bottom: 10px;
+    background-color: #6a994e; /* Light grey background for the container */
+    border-radius: 8px; /* Rounded corners for the container */
+    overflow: hidden; /* Ensures inner buttons conform to container's border radius */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.leaderboard-date-controls button {
+    flex: 1; /* Equal width for all buttons */
+    background-color: transparent; /* Transparent background for buttons */
+    color: white; /* Dark text color for contrast */
+    padding: 10px 25px; /* Increased padding for wider buttons */
+    font-size: 16px; /* Larger font size */
+    border: none; /* No border for buttons */
+}
+
+.leaderboard-date-controls button:hover,
+.leaderboard-date-controls button:focus {
+    background-color: #8bb871; /* Slightly darker on hover/focus */
+    outline: none; /* Remove focus outline */
+}
+
+/* Styles for Type Controls */
+.leaderboard-type-controls {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.leaderboard-type-controls button {
+    flex: 1; /* Equal width for all buttons */
+    background-color: #95b64a; /* Distinct background color */
+    color: white; /* Text color */
+    border-radius: 5px; /* Rounded corners for buttons */
+    margin-left: 5px; /* Spacing between buttons */
+}
+
+.leaderboard-type-controls button:hover,
+.leaderboard-type-controls button:focus {
+    background-color: #aac962; /* Slightly darker on hover/focus */
+    outline: none; /* Remove focus outline */
+}
+
+.leaderboard-type-controls button:first-child {
+    margin-left: 0; /* No margin for the first button */
+}
+
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-weight: bold;
+    word-wrap: break-word;
+    text-align: center;
+    font-size: 18px;
+}
+
+.leaderboard-table th {
+    background-color: #f4f4f4;
+    font-size: 22px;
+}
+
+.leaderboard-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.leaderboard-table tr:hover {
+    background-color: #eaeaea;
+}
+
+.refresh-button {
+    margin-top: 25px;
+    padding: 15px 20px;
+    background-color: #766153;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.refresh-button:hover {
+    background-color: #3a6b35;
+}
