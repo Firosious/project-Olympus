@@ -1,3 +1,4 @@
+// fitnessData.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
@@ -18,7 +19,7 @@ async function getUserDetails(userId) {
 }
 
 router.post('/sync', async (req, res) => {
-    const { userId, accessToken, startDate, endDate } = req.body;
+    const { userId, accessToken, startDate, endDate, syncType } = req.body;
 
     if (!startDate || !endDate) {
         return res.status(400).send('Start date and end date are required.');
@@ -55,6 +56,17 @@ router.post('/sync', async (req, res) => {
 
             processedActivities++;
             syncStatus[userId].progress = Math.round((processedActivities / totalActivities) * 100);
+        }
+
+        // Update last sync time in User model
+        const user = await User.findOne({ googleId: userId });
+        if (user) {
+            if (syncType === 'all') {
+                user.lastAllDataSync = new Date();
+            } else if (syncType === '7day') {
+                user.last7DaySync = new Date();
+            }
+            await user.save();
         }
 
         res.status(200).json({ message: 'Data synced successfully' });

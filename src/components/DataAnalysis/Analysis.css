@@ -1,6 +1,30 @@
 /* Analysis.css */
+.Analysis {
+    text-align: center;
+    position: relative; /* Needed for pseudo-element positioning */
+    min-height: 100vh;
+    height: auto; /* Adjust based on content */
+  }
+  
+  .Analysis::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('../../img/forestFootprintBG.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.95;
+    z-index: -1;
+    background-color: #fef6e4; /* Fallback color */
+  }
+
 .chart-container {
     text-align: center;
+    margin-top: 70px;
 }
 
 .line-chart {
@@ -14,8 +38,19 @@
   font-weight: bold;
 }
 
+.all-buttons-container {
+    margin-top: 20px;
+    display: flex;         /* Use flexbox for alignment */
+    flex-direction: column; /* Align items vertically */
+    align-items: center;    /* Center-align items horizontally */
+}
+
 .buttons-container {
     margin-top: 20px;
+}
+
+.week-button {
+    background-color: #6a994e;
 }
 
 .week-button,
@@ -27,6 +62,7 @@
     border: none;
     border-radius: 4px;
     font-size: 16px;
+    font-weight: bold;
 }
 
 .sync-buttons-container {
@@ -34,12 +70,12 @@
 }
 
 .sync-button {
-    background-color: #4CAF50;
+    background-color: #e76f51;
     color: white;
 }
 
 .sync-last-7-days-button {
-    background-color: #FF5722;
+    background-color: #e76f51;
     color: white;
 }
 

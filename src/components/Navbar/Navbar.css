@@ -1,0 +1,35 @@
+/* Navbar.css */
+.navbar-container {
+    background-color: #6a994e;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-logo {
+    height: 55px; /* Adjust this value as needed */
+    width: auto; /* Maintain aspect ratio */
+    vertical-align: middle; /* Aligns image vertically in line with other navbar items */
+}
+
+.navbar-buttons {
+    display: flex;
+}
+
+.navbar-button {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent white */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-button img {
+    margin-right: 5px;
+    height: 20px; /* Adjust size as needed */
+}

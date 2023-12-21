@@ -1,39 +1,112 @@
 /* src/components/Dashboard/Dashboard.css */
 .Dashboard {
-    text-align: center;
-  }
-  
-  .Dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #eaeaea;
-  }
-  
-  .Dashboard-content {
-    margin: 20px;
-  }
-  
-  input[type="number"] {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  button {
-    margin: 0 10px;
-    padding: 10px 20px;
-    background-color: #4285f4;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    opacity: 0.8;
-  }
-  
+  text-align: center;
+  position: relative; /* Needed to contain the pseudo-element */
+  min-height: 100vh; /* Ensure the background covers the whole viewport height */
+}
+
+.Dashboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url('../../img/forestFootprintBG.png');
+  background-size: cover; /* Ensure the image covers the entire area */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  opacity: 0.95; /* Opacity */
+  z-index: -1; /* Ensure the image is behind the content */
+  background-color: #fef6e4;
+}
+
+.Dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.Dashboard-content {
+  margin: 20px;
+}
+
+button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.custom-tooltip {
+  font-size: 14px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+
+}
+
+.bar-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+}
+
+.chart-title {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.5em;
+}
+
+.overlay-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it's above all other content */
+}
+
+.dashboard-alert-message {
+  background-color: #E74C3C;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+  max-width: 400px;
+  text-align: center;
+  color: whitesmoke;
+  font-weight: 400;
+  padding-top: 20px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.dashboard-close-alert-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}

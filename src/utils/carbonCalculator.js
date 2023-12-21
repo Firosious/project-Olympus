@@ -1,26 +1,31 @@
 // CarbonCalculator.js
 
-// Constants for carbon emission factors per kilometer (kg CO2/km)
+// Constants for carbon emission factors per kilometer (g CO2/km)
 const EMISSION_FACTORS = {
-    car: 108.2, // Avg emission factor for cars
-    bus: 105, // Avg emission factor for buses
-    train: 41, // Avg emission factor for trains
-    // Add more if needed
-  };
-  
-  /**
-   * Calculates the amount of carbon dioxide emissions saved by walking a certain distance,
-   * compared to using various modes of transportation.
-   * @param {number} distanceKm - The distance in kilometers.
-   * @returns {Object} An object containing the amount of CO2e saved for each mode of transport.
-   */
-  export function calculateCarbonSavings(distanceKm) {
-    let savings = {};
-  
-    for (const mode in EMISSION_FACTORS) {
-      savings[mode] = distanceKm * EMISSION_FACTORS[mode];
-    }
-  
-    return savings;
+  walking: 16, // Based on average diet and energy expenditure
+  bicycle: 0, // Assumed negligible due to human-powered transport
+  e_scooter: 42.8, // check actual values find paper
+  e_car: 40, // Based on average U.S. grid electricity for charging (Tesla Model Y)
+  ree_car: 0, // Renewable energy power source
+  car: 170, // Average CO2 emissions from petrol combustion
+  bus: 89, // Estimated from average bus emissions
+  train: 35, // Average emissions from rail transport
+  plane: 88 // g CO2e per RPK (Revenue Passenger Kilometer)
+};
+
+/**
+* Calculates the carbon dioxide emissions for various modes of transportation over a certain distance.
+* @param {number} distanceKm - The distance in kilometers.
+* @returns {Object} An object containing the CO2 emissions for each mode of transport.
+*/
+function calculateCarbonEmissions(distanceKm) {
+  let emissions = {};
+
+  for (const mode in EMISSION_FACTORS) {
+      emissions[mode] = distanceKm * EMISSION_FACTORS[mode];
   }
-  
+
+  return emissions;
+}
+
+module.exports = { calculateCarbonEmissions };

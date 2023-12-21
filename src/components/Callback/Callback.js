@@ -1,4 +1,3 @@
-// Callback.js
 import { useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -23,10 +22,7 @@ function Callback() {
           lastName: data.family_name,
           email: data.email
         };
-        console.log('Google API response:', data);
-        console.log('User data to be sent:', user); // Add this line
 
-        // Save user data to backend and handle the response
         return fetch('http://localhost:5000/api/users/authenticate', {
           method: 'POST',
           headers: {
@@ -37,34 +33,16 @@ function Callback() {
       })
       .then(response => response.json())
       .then(savedUser => {
-        // Update login state with the saved user data
         login(savedUser);
         localStorage.setItem('googleAccessToken', accessToken);
-
-        // Navigate to dashboard or handle popup window
-        if (window.opener) {
-          window.opener.postMessage({ success: true, user: savedUser }, window.location.origin);
-          window.close();
-        } else {
-          navigate('/dashboard');
-        }
+        navigate('/dashboard');
       })
       .catch(error => {
         console.error('Error fetching user data:', error);
-        if (window.opener) {
-          window.opener.postMessage({ success: false }, window.location.origin);
-          window.close();
-        } else {
-          navigate('/login');
-        }
+        navigate('/');
       });
     } else {
-      if (window.opener) {
-        window.opener.postMessage({ success: false }, window.location.origin);
-        window.close();
-      } else {
-        navigate('/login');
-      }
+      navigate('/');
     }
   }, [navigate, login]);
 

@@ -6,7 +6,6 @@ const dailyActivitySchema = new mongoose.Schema({
     date: String, // Format: "YYYY-MM-DD"
     steps: Number,
     distance: Number, // e.g., in kilometers or miles
-    pace: Number, // e.g., minutes per kilometer
     duration: Number, // e.g., in minutes
     carbonFootprint: Number
     // Add other fields if needed
@@ -16,7 +15,7 @@ const dailyActivitySchema = new mongoose.Schema({
 const fitnessActivitySchema = new mongoose.Schema({
     userId: {
         type: String,
-        ref: 'User', // Replace 'User' with your User model name if different
+        ref: 'User',
         required: true
     },
     year: {

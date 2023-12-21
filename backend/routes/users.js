@@ -14,14 +14,15 @@ router.post('/authenticate', async (req, res) => {
         if (!user) {
             // If the user doesn't exist, create a new one
             user = new User({ googleId, firstName, lastName, email });
-            await user.save();
         } else {
             // Optionally update user data if it already exists
             user.firstName = firstName;
             user.lastName = lastName;
             user.email = email;
-            await user.save();
         }
+
+        user.lastLogin = new Date(); // Update last login time
+        await user.save();
 
         res.status(200).json(user);
     } catch (err) {
@@ -48,6 +49,25 @@ router.post('/updateSettings', async (req, res) => {
         await user.save();
 
         res.json({ msg: 'User updated successfully', user });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// GET /api/users/syncTimes/:userId
+router.get('/syncTimes/:googleId', async (req, res) => {
+    try {
+        const user = await User.findOne({ googleId: req.params.googleId });
+
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        res.json({
+            lastAllDataSync: user.lastAllDataSync,
+            last7DaySync: user.last7DaySync
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
