@@ -3,9 +3,7 @@ const router = express.Router();
 const Leaderboard = require("../models/LeaderboardModel");
 const User = require("../models/User");
 const FitnessActivity = require("../models/FitnessActivity");
-const {
-  calculateCarbonEmissions,
-} = require("../../src/utils/carbonCalculator.js");
+const { calculateCarbonEmissions } = require("../../src/utils/carbonCalculator.js");
 const { calculateDistance } = require("../../src/utils/distanceCalculator.js");
 
 async function updateLeaderboardStats() {

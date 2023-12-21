@@ -132,12 +132,6 @@ function HomePage() {
           Sign in with Google
         </button>
       </section>
-      <footer className="HomePage-footer">
-        <h1>Meet the team:
-          Firose, Patrick, Éanna, Audrius
-        </h1>
-        <img src={footerImage} alt="Footer" /> 
-      </footer>
     </div>
   );
 }

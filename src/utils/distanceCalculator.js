@@ -1,5 +1,3 @@
-// distanceCalculator.js
-
 /**
  * Calculates the stride length based on height and sex.
  * @param {number} heightInCm - Height of the user in centimeters.

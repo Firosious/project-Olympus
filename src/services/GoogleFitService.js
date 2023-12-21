@@ -1,5 +1,3 @@
-// GoogleFitService.js
-
 const fetchStepData = async (accessToken) => {
   const now = new Date();
   const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
@@ -27,7 +25,7 @@ const fetchStepData = async (accessToken) => {
     return steps;
   } catch (error) {
     console.error('Error fetching step data:', error);
-    return 0; // or handle the error as you see fit
+    return 0;
   }
 };
 

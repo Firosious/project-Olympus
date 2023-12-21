@@ -1,8 +1,7 @@
-// Navbar.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import SettingsModal from "../Modal/SettingsModal"; // Update this path as needed
+import SettingsModal from "../Modal/SettingsModal";
 import "./Navbar.css";
 import dashboardIcon from "../../img/navbar/dashboard.png";
 import analysisIcon from "../../img/navbar/analysis.png";

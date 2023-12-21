@@ -19,7 +19,7 @@
     background-repeat: no-repeat;
     opacity: 0.95;
     z-index: -1;
-    background-color: #fef6e4; /* Fallback color */
+    background-color: #fef6e4;
   }
 
 .chart-container {
