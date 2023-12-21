@@ -71,51 +71,50 @@ function HomePage() {
           <div>
             <p>
               <u>Key dependencies we used in our project:</u>
-              <ul>
-                <li>
-                  <span className="dependency-name">React Router</span> for
-                  dynamic and responsive navigation.
-                </li>
-                <li>
-                  <span className="dependency-name">Axios</span> for API
-                  integration and data fetching.
-                </li>
-                <li>
-                  <span className="dependency-name">Recharts</span> for visually
-                  representing carbon emission data.
-                </li>
-                <li>
-                  <span className="dependency-name">Mongoose</span> for
-                  streamlined database operations.
-                </li>
-                <li>
-                  <span className="dependency-name">Express</span> as the
-                  backend framework for API development.
-                </li>
-              </ul>
             </p>
+            <ul>
+              <li>
+                <span className="dependency-name">React Router</span> for
+                dynamic and responsive navigation.
+              </li>
+              <li>
+                <span className="dependency-name">Axios</span> for API
+                integration and data fetching.
+              </li>
+              <li>
+                <span className="dependency-name">Recharts</span> for visually
+                representing carbon emission data.
+              </li>
+              <li>
+                <span className="dependency-name">Mongoose</span> for
+                streamlined database operations.
+              </li>
+              <li>
+                <span className="dependency-name">Express</span> as the backend
+                framework for API development.
+              </li>
+            </ul>
           </div>
           <div>
             <p>
               <u>Key technologies we used in our project:</u>
-              <ul>
-                <li>
-                  <span className="api-name">Google Fit API:</span> For
-                  real-time tracking of physical activities such as walking or
-                  cycling.
-                </li>
-                <li>
-                  <span className="api-name">React JavaScript:</span> To build a
-                  dynamic and responsive user interface, ensuring a seamless
-                  experience across different devices.
-                </li>
-                <li>
-                  <span className="api-name">MongoDB:</span> Chosen for its
-                  flexibility and scalability, our backend database efficiently
-                  manages user data and activity logs.
-                </li>
-              </ul>
             </p>
+            <ul>
+              <li>
+                <span className="api-name">Google Fit API:</span> For real-time
+                tracking of physical activities such as walking or cycling.
+              </li>
+              <li>
+                <span className="api-name">React JavaScript:</span> To build a
+                dynamic and responsive user interface, ensuring a seamless
+                experience across different devices.
+              </li>
+              <li>
+                <span className="api-name">MongoDB:</span> Chosen for its
+                flexibility and scalability, our backend database efficiently
+                manages user data and activity logs.
+              </li>
+            </ul>
           </div>
         </div>
 
